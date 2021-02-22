@@ -34,4 +34,12 @@ if (process.env.NODE_ENV === 'production') {
 app.use(middleware.unknownEndpoint)
 app.use(middleware.errorHandler)
 
+app.get('/*', function(req, res) {
+  res.sendFile(path.join(__dirname, './build/index.html'), function(err) {
+    if (err) {
+      res.status(500).send(err)
+    }
+  })
+})
+
 module.exports = app
