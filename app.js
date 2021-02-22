@@ -27,6 +27,10 @@ if (process.env.NODE_ENV === 'test') {
     const testingRouter = require('./controllers/tests')
     app.use('/api/tests', testingRouter)
   }
+
+if (process.env.NODE_ENV === 'production') {
+    app.use(express.static('build'));
+}
 app.use(middleware.unknownEndpoint)
 app.use(middleware.errorHandler)
 
