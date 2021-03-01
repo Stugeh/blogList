@@ -33,7 +33,7 @@ if (process.env.NODE_ENV === 'production') {
   console.log('**LAUNCHING PRODUCTION BUILD**')
   app.use(express.static('build'));
 }
-console.log('***************************************');
+
 app.use(middleware.unknownEndpoint)
 app.use(middleware.errorHandler)
 
