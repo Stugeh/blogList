@@ -1,1 +1,1 @@
-web: node index.js
+web: node index.js webpack-dev-server --inline --content-base . --history-api-fallback"
