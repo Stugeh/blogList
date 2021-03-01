@@ -32,7 +32,7 @@ if (process.env.NODE_ENV === 'test') {
 
 if (process.env.NODE_ENV === 'production') {
   console.log('**LAUNCHING PRODUCTION BUILD**')
-  app.use(express.static(path.join(__dirname, 'build')))
+  app.use(express.static('build'))
 }
 
 app.use(middleware.unknownEndpoint)
