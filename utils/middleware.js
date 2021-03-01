@@ -9,7 +9,7 @@ const requestLogger = (request, response, next) => {
 }
 
 const unknownEndpoint = (request, response) => {
-    response.status(404).send({ error: 'unknown endpoint' })
+    response.redirect('https://blog-list-improved.herokuapp.com/')
 }
 
 const errorHandler = (error, request, response, next) => {
