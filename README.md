@@ -1,3 +1,5 @@
 # blogList 
-There's a bug where on refresh or entering it directly in the adress bar certain endpoints like '/api/blogs/:id/ return a json object{error: "unknown endpoint"}.
-since deploying this app is purely for personal purposes i dont have the time to fix this error. it will be done eventually but for now i have to move on to the next stages of the course.
+CRUD app made with the mern stack where users can manage a database of blogs. the unbuilt client code can be found here: https://github.com/Stugeh/FullstackOpen2020/tree/master/part7/blogList/client
+
+
+deployed at https://blog-list-improved.herokuapp.com/ production version has some minor routing issues due to react router and back end routing not working together as intended but the app functions apart from those issues.
