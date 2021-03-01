@@ -28,22 +28,16 @@ app.use('/api/login', loginRouter)
 if (process.env.NODE_ENV === 'test') {
     const testingRouter = require('./controllers/tests')
     app.use('/api/tests', testingRouter)
-  }
+}
 
 if (process.env.NODE_ENV === 'production') {
-  console.log('**LAUNCHING PRODUCTION BUILD**')
-  app.use(express.static('build'))
+    app.use(express.static('build'));
+    app.get('*', (req, res) => {
+      res.sendFile(path.join('build', 'index.html'));
+    });
 }
 
 app.use(middleware.unknownEndpoint)
 app.use(middleware.errorHandler)
-
-app.get('/*', function(req, res) {
-  res.sendFile(path.join(__dirname, './build/index.html'), function(err) {
-    if (err) {
-      res.status(500).send(err)
-    }
-  })
-})
 
 module.exports = app
