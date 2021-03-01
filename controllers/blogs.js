@@ -16,10 +16,6 @@ blogRouter.get('/', async (request, response) => {
     }
 })
 
-blogRouter.get('/:id', async (request, response) => {
-    res.status(200).end()
-})
-
 blogRouter.post('/', async (request, response) => {
     const body = request.body
     const decodedToken = jwt.verify(request.token, process.env.SECRET)
