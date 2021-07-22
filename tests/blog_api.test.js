@@ -46,8 +46,6 @@ describe('POST operation works as intended for api/blogs', () => {
         await Blog.insertMany(helper.initialBlogs)
         const blogs = await api.get('/api/blogs')
         const users = await api.get('/api/users')
-        console.log('BLOGS', blogs.body)
-        console.log('USERS', users.body)
     })
 
 
@@ -61,7 +59,6 @@ describe('POST operation works as intended for api/blogs', () => {
             .post('/api/login')
             .send({ username: 'Stugeh', password: 'password' })
         token = response.body.token
-        console.log('token', token)
     })
     const newBlog = {
         title: 'blogtitle',
