@@ -242,6 +242,11 @@ describe('PUT operation works as intended for api/blogs', () => {
         name: 'Tuukka Veteli',
         password: 'password'
     }
+    const newBlog = {
+        title: 'blogtitle',
+        author: 'testAuthor',
+        url: 'www.blog.com',
+    }
     let token = undefined
     beforeEach(async () => {
         await Blog.deleteMany({})
@@ -250,22 +255,28 @@ describe('PUT operation works as intended for api/blogs', () => {
             .post('/api/users')
             .send(newUser)
         const response = await api
-        .post('/api/login')
-        .send({ username: newUser.username, password: newUser.password })
+            .post('/api/login')
+            .send({ username: newUser.username, password: newUser.password })
         token = response.body.token
+
+        await api
+            .post('/api/blogs')
+            .set('Authorization', `bearer ${token}`)
+            .send(newBlog)
     })
+
     test('Entry gets updated', async () => {
-        let blogs = await api.get('/api/blogs/')
-        let blog = blogs.body[0]
-        const updatedBlog = { ...blog, likes: 9999 }
+        const blogs = await api.get('/api/blogs/')
+        const blog = blogs.body.find(blog => blog.title === newBlog.title)
+        const updatedBlog = { ...blog, likes: 9999, user: blog.user.id}
         await api
             .put(`/api/blogs/${blog.id}`, updatedBlog)
             .set('Authorization', `bearer ${token}`)
             .send(updatedBlog)
             .expect(200)
-        blogs = await api.get('/api/blogs/')
-        blog = blogs.body[0]
-        expect(blog.likes).toEqual(9999)
+        const newBlogs = await api.get('/api/blogs/')
+        
+        expect(newBlogs.body.find(blog => blog.title === newBlog.title).likes).toEqual(9999)
     })
 })
 
@@ -302,7 +313,7 @@ describe('Adding user', () => {
             .send(uNamelessUser)
             .expect(400)
     })
-    test('Paswwords shorter than 3 symbols are rejected', async () => {
+    test('Passwords shorter than 3 symbols are rejected', async () => {
         await api
             .post('/api/users')
             .send(shortPwUser)
