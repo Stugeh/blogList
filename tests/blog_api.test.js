@@ -36,8 +36,12 @@ describe('GET works as intended for api/blogs', () => {
 })
 
 describe('POST operation works as intended for api/blogs', () => {
-    let token
-
+    const newUser = {
+        username: 'TestUser',
+        name: 'Tuukka Veteli',
+        password: 'password'
+    }
+    let token = undefined
 
     test('init works', async () => {
         await User.deleteMany({})
@@ -46,20 +50,33 @@ describe('POST operation works as intended for api/blogs', () => {
         await Blog.insertMany(helper.initialBlogs)
         const blogs = await api.get('/api/blogs')
         const users = await api.get('/api/users')
+        expect(blogs.body.length).toEqual(helper.initialBlogs.length)
+        expect(users.body.length).toEqual(helper.initialUsers.length)
+
+        await api
+            .post('/api/users')
+            .send(newUser)
+        const response = await api
+            .post('/api/login')
+            .send({ username: newUser.username, password: newUser.password })
+        token = response.body.token
+        expect(token.length).not.toEqual(0)
     })
 
-
-    //FIX ME
     beforeEach(async () => {
         await Blog.deleteMany({})
         await User.deleteMany({})
         await User.insertMany(helper.initialUsers)
         await Blog.insertMany(helper.initialBlogs)
+        await api
+            .post('/api/users')
+            .send(newUser)
         const response = await api
-            .post('/api/login')
-            .send({ username: 'Stugeh', password: 'password' })
+        .post('/api/login')
+        .send({ username: newUser.username, password: newUser.password })
         token = response.body.token
     })
+
     const newBlog = {
         title: 'blogtitle',
         author: 'testAuthor',
@@ -69,9 +86,9 @@ describe('POST operation works as intended for api/blogs', () => {
     }
 
     test('POST goes through with correct code and content type', async () => {
-        await api
+        const res = await api
             .post('/api/blogs')
-            .set('Authorization', token)
+            .set('Authorization', `bearer ${token}`)
             .send(newBlog)
             .expect(200)
             .expect('Content-Type', /application\/json/)
@@ -80,7 +97,7 @@ describe('POST operation works as intended for api/blogs', () => {
     test('Amount of blogs in db grows by one', async () => {
         await api
             .post('/api/blogs')
-            .set('Authorization', token)
+            .set('Authorization', `bearer ${token}`)
             .send(newBlog)
 
         const blogs = await api.get('/api/blogs')
@@ -90,7 +107,7 @@ describe('POST operation works as intended for api/blogs', () => {
     test('New blog is found in the database', async () => {
         await api
             .post('/api/blogs')
-            .set('Authorization', token)
+            .set('Authorization', `bearer ${token}`)
             .send(newBlog)
 
         const res = await api.get('/api/blogs')
@@ -107,7 +124,7 @@ describe('POST operation works as intended for api/blogs', () => {
         }
         await api
             .post('/api/blogs')
-            .set('Authorization', token)
+            .set('Authorization', `bearer ${token}`)
             .send(noLikeBlog)
 
             .expect(200)
@@ -125,7 +142,7 @@ describe('POST operation works as intended for api/blogs', () => {
         }
         await api
             .post('/api/blogs')
-            .set('Authorization', token)
+            .set('Authorization', `bearer ${token}`)
             .send(noUrlBlog)
             .expect(400)
     })
@@ -138,22 +155,38 @@ describe('POST operation works as intended for api/blogs', () => {
         }
         await api
             .post('/api/blogs')
-            .set('Authorization', token)
+            .set('Authorization', `bearer ${token}`)
             .send(noTitleBlog)
             .expect(400)
     })
 })
 
 describe('DELETE operation works as intended for api/blogs', () => {
+    const newUser = {
+        username: 'TestUser',
+        name: 'Tuukka Veteli',
+        password: 'password'
+    }
+    let token = undefined
+
     beforeEach(async () => {
         await Blog.deleteMany({})
         await Blog.insertMany(helper.initialBlogs)
+        await api
+            .post('/api/users')
+            .send(newUser)
+        const response = await api
+            .post('/api/login')
+            .send({ username: newUser.username, password: newUser.password })
+        token = response.body.token
     })
+
     test('DELETE command goes through and database has one less entry', async () => {
         const blogs = await api.get('/api/blogs/')
         const id = blogs.body[0].id
         await api
             .delete(`/api/blogs/${id}`)
+            .set('Authorization', `bearer ${token}`)
             .expect(204)
         const blogdb = await api.get('/api/blogs/')
         expect(blogdb.body.length).toEqual(helper.initialBlogs.length - 1)
@@ -162,9 +195,22 @@ describe('DELETE operation works as intended for api/blogs', () => {
 })
 
 describe('PUT operation works as intended for api/blogs', () => {
+    const newUser = {
+        username: 'TestUser',
+        name: 'Tuukka Veteli',
+        password: 'password'
+    }
+    let token = undefined
     beforeEach(async () => {
         await Blog.deleteMany({})
         await Blog.insertMany(helper.initialBlogs)
+        await api
+            .post('/api/users')
+            .send(newUser)
+        const response = await api
+        .post('/api/login')
+        .send({ username: newUser.username, password: newUser.password })
+        token = response.body.token
     })
     test('Entry gets updated', async () => {
         let blogs = await api.get('/api/blogs/')
@@ -172,6 +218,7 @@ describe('PUT operation works as intended for api/blogs', () => {
         const updatedBlog = { ...blog, likes: 9999 }
         await api
             .put(`/api/blogs/${blog.id}`, updatedBlog)
+            .set('Authorization', `bearer ${token}`)
             .send(updatedBlog)
             .expect(200)
         blogs = await api.get('/api/blogs/')
