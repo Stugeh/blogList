@@ -167,29 +167,71 @@ describe('DELETE operation works as intended for api/blogs', () => {
         name: 'Tuukka Veteli',
         password: 'password'
     }
+    const newBlog = {
+        title: 'blogtitle',
+        author: 'testAuthor',
+        url: 'www.blog.com',
+    }
     let token = undefined
 
-    beforeEach(async () => {
+    test('DELETE test initialization works', async () => { 
         await Blog.deleteMany({})
+        await User.deleteMany({})
+        await User.insertMany(helper.initialUsers)
         await Blog.insertMany(helper.initialBlogs)
+
         await api
             .post('/api/users')
             .send(newUser)
+
         const response = await api
             .post('/api/login')
             .send({ username: newUser.username, password: newUser.password })
         token = response.body.token
+        
+        await api
+            .post('/api/blogs')
+            .set('Authorization', `bearer ${token}`)
+            .send(newBlog)
+        
+        const blogs = await api.get('/api/blogs')
+        const users = await api.get('/api/users')
+        expect(blogs.body.length).toEqual(helper.initialBlogs.length+1)
+        expect(users.body.length).toEqual(helper.initialUsers.length+1)
+    })
+
+    beforeEach(async () => {
+        await Blog.deleteMany({})
+        await User.deleteMany({})
+        await User.insertMany(helper.initialUsers)
+        await Blog.insertMany(helper.initialBlogs)
+
+        await api
+            .post('/api/users')
+            .send(newUser)
+
+        const response = await api
+            .post('/api/login')
+            .send({ username: newUser.username, password: newUser.password })
+        token = response.body.token
+        
+        await api
+            .post('/api/blogs')
+            .set('Authorization', `bearer ${token}`)
+            .send(newBlog)
     })
 
     test('DELETE command goes through and database has one less entry', async () => {
         const blogs = await api.get('/api/blogs/')
-        const id = blogs.body[0].id
+        const {id} = blogs.body.find(blog => blog.title === newBlog.title)
+        
         await api
             .delete(`/api/blogs/${id}`)
             .set('Authorization', `bearer ${token}`)
             .expect(204)
+        
         const blogdb = await api.get('/api/blogs/')
-        expect(blogdb.body.length).toEqual(helper.initialBlogs.length - 1)
+        expect(blogdb.body.length).toEqual(helper.initialBlogs.length)
     })
 
 })
