@@ -8,9 +8,9 @@ const requestLogger = (request, response, next) => {
     next()
 }
 
-const unknownEndpoint = (request, response) => {
-    response.redirect('https://blog-list-improved.herokuapp.com/')
-}
+// const unknownEndpoint = (request, response) => {
+//     response.redirect('')
+// }
 
 const errorHandler = (error, request, response, next) => {
     logger.error(error.message)
@@ -36,7 +36,6 @@ const tokenExtractor = (req, res, next) => {
 
 module.exports = {
     requestLogger,
-    unknownEndpoint,
     errorHandler,
     tokenExtractor
 }
