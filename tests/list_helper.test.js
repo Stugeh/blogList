@@ -1,3 +1,6 @@
+/**
+ * @jest-environment node
+ */
 const list_helper = require('../utils/list_helper')
 
 test('dummy returns one', () => {

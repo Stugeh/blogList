@@ -1,3 +1,6 @@
+/**
+ * @jest-environment node
+ */
 const supertest = require('supertest')
 const mongoose = require('mongoose')
 const helper = require('./test_helper')
@@ -41,107 +44,107 @@ describe('POST operation works as intended for api/blogs', () => {
         await Blog.deleteMany({})
         await User.insertMany(helper.initialUsers)
         await Blog.insertMany(helper.initialBlogs)
-        //const blogs = await api.get('/api/blogs')
-        //const users = await api.get('/api/users')
-        // console.log('BLOGS', blogs.body)
-        // console.log('USERS', users.body)
+        const blogs = await api.get('/api/blogs')
+        const users = await api.get('/api/users')
+        console.log('BLOGS', blogs.body)
+        console.log('USERS', users.body)
     })
 
 
     //FIX ME
-    // beforeEach(async () => {
-    //     await Blog.deleteMany({})
-    //     await User.deleteMany({})
-    //     await User.insertMany(helper.initialUsers)
-    //     await Blog.insertMany(helper.initialBlogs)
-    //     const response = await api
-    //         .post('/api/login')
-    //         .send({ username: 'Stugeh', password: 'password' })
-    //     token = response.body.token
-    //     console.log('token', token)
-    // })
-    // const newBlog = {
-    //     title: 'blogtitle',
-    //     author: 'testAuthor',
-    //     url: 'www.blog.com',
-    //     likes: 12,
-    //     userId: '5a422a851b54a676234d17f7'
-    // }
+    beforeEach(async () => {
+        await Blog.deleteMany({})
+        await User.deleteMany({})
+        await User.insertMany(helper.initialUsers)
+        await Blog.insertMany(helper.initialBlogs)
+        const response = await api
+            .post('/api/login')
+            .send({ username: 'Stugeh', password: 'password' })
+        token = response.body.token
+        console.log('token', token)
+    })
+    const newBlog = {
+        title: 'blogtitle',
+        author: 'testAuthor',
+        url: 'www.blog.com',
+        likes: 12,
+        userId: '5a422a851b54a676234d17f7'
+    }
 
-    // test('POST goes through with correct code and content type', async () => {
-    //     await api
-    //         .post('/api/blogs')
-    //         .set('Authorization', token)
-    //         .send(newBlog)
-    //         .expect(200)
-    //         .expect('Content-Type', /application\/json/)
-    // })
+    test('POST goes through with correct code and content type', async () => {
+        await api
+            .post('/api/blogs')
+            .set('Authorization', token)
+            .send(newBlog)
+            .expect(200)
+            .expect('Content-Type', /application\/json/)
+    })
 
-    // test('Amount of blogs in db grows by one', async () => {
-    //     await api
-    //         .post('/api/blogs')
-    //         .set('Authorization', token)
-    //         .send(newBlog)
+    test('Amount of blogs in db grows by one', async () => {
+        await api
+            .post('/api/blogs')
+            .set('Authorization', token)
+            .send(newBlog)
 
-    //     const blogs = await api.get('/api/blogs')
-    //     expect(blogs.body.length).toEqual(helper.initialBlogs.length + 1)
-    // })
+        const blogs = await api.get('/api/blogs')
+        expect(blogs.body.length).toEqual(helper.initialBlogs.length + 1)
+    })
 
-    // test('New blog is found in the database', async () => {
-    //     await api
-    //         .post('/api/blogs')
-    //         .set('Authorization', token)
-    //         .send(newBlog)
+    test('New blog is found in the database', async () => {
+        await api
+            .post('/api/blogs')
+            .set('Authorization', token)
+            .send(newBlog)
 
-    //     const res = await api.get('/api/blogs')
-    //     const blogs = res.body.map(r => r.title)
-    //     expect(blogs).toContain(newBlog.title)
-    // })
+        const res = await api.get('/api/blogs')
+        const blogs = res.body.map(r => r.title)
+        expect(blogs).toContain(newBlog.title)
+    })
 
-    // test('Likes default to 0', async () => {
-    //     const noLikeBlog = {
-    //         title: 'blogtitle',
-    //         author: 'testAuthor',
-    //         url: 'www.blog.com',
-    //         userId: "5a422a851b54a676234d17f9",
-    //     }
-    //     await api
-    //         .post('/api/blogs')
-    //         .set('Authorization', token)
-    //         .send(noLikeBlog)
+    test('Likes default to 0', async () => {
+        const noLikeBlog = {
+            title: 'blogtitle',
+            author: 'testAuthor',
+            url: 'www.blog.com',
+            userId: "5a422a851b54a676234d17f9",
+        }
+        await api
+            .post('/api/blogs')
+            .set('Authorization', token)
+            .send(noLikeBlog)
 
-    //         .expect(200)
-    //     const res = await api.get('/api/blogs')
-    //     const blogs = res.body.filter(blog => blog.title === noLikeBlog.title)
-    //     expect(blogs[0].likes).toEqual(0)
+            .expect(200)
+        const res = await api.get('/api/blogs')
+        const blogs = res.body.filter(blog => blog.title === noLikeBlog.title)
+        expect(blogs[0].likes).toEqual(0)
 
-    // })
+    })
 
-    // test('decline post if no url given', async () => {
-    //     const noUrlBlog = {
-    //         title: 'blogtitle',
-    //         author: 'testAuthor',
-    //         userId: "5a422a851b54a676234d17f8",
-    //     }
-    //     await api
-    //         .post('/api/blogs')
-    //         .set('Authorization', token)
-    //         .send(noUrlBlog)
-    //         .expect(400)
-    // })
+    test('decline post if no url given', async () => {
+        const noUrlBlog = {
+            title: 'blogtitle',
+            author: 'testAuthor',
+            userId: "5a422a851b54a676234d17f8",
+        }
+        await api
+            .post('/api/blogs')
+            .set('Authorization', token)
+            .send(noUrlBlog)
+            .expect(400)
+    })
 
-    // test('decline post if no title given', async () => {
-    //     const noTitleBlog = {
-    //         author: 'testAuthor',
-    //         url: 'www.blog.com',
-    //         userId: "5a422a851b54a676234d17f9",
-    //     }
-    //     await api
-    //         .post('/api/blogs')
-    //         .set('Authorization', token)
-    //         .send(noTitleBlog)
-    //         .expect(400)
-    // })
+    test('decline post if no title given', async () => {
+        const noTitleBlog = {
+            author: 'testAuthor',
+            url: 'www.blog.com',
+            userId: "5a422a851b54a676234d17f9",
+        }
+        await api
+            .post('/api/blogs')
+            .set('Authorization', token)
+            .send(noTitleBlog)
+            .expect(400)
+    })
 })
 
 describe('DELETE operation works as intended for api/blogs', () => {
