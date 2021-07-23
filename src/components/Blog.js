@@ -14,12 +14,14 @@ const Blog = ({ blog, setBlogs, testHandler = () => {} }) => {
     event.preventDefault()
     testHandler()
     try {
-      const newBlog = {
-        ...updatedBlog,
-        likes: updatedBlog.likes + 1,
-        user: updatedBlog.user.id,
+      if(updatedBlog.user){
+        const newBlog = {
+          ...updatedBlog,
+          likes: updatedBlog.likes + 1,
+          user: updatedBlog.user.id,
+        }
+        setBlog(await blogService.update(blog.id, newBlog))
       }
-      setBlog(await blogService.update(blog.id, newBlog))
     } catch (e) {
       throw new Error(e)
     }
