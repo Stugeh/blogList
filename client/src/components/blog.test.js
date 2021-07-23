@@ -19,11 +19,15 @@ describe('BLOG TESTS', () => {
       author: 'blogs author',
       likes: 10,
       url: 'www.test.com',
+      id: 1
     }
 
     component = render(
-      <Blog blog={blog} setBlogs={mockSetter} testHandler={mockLike} />,
-    )
+      <Blog
+        blog={blog}
+        setBlogs={mockSetter}
+        testHandler={mockLike}
+      />)
   })
 
   test('renders blog correctly', () => {
