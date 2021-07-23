@@ -41,13 +41,16 @@ module.exports = {
   },
   devServer: {
     historyApiFallback: true,
+    contentBase: path.join(__dirname, 'dist'),
+    compress: true, 
+    port: 3001,
   },
   plugins: [
     new HtmlWebPackPlugin({
       template: "./public/index.html",
       filename: "./index.html",
       favicon: "./public/favicon.ico",
-      manifest: "./public/manifest.json"
+      manifest: "../../public/manifest.json"
 
     }),
   ],
