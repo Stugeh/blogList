@@ -3,7 +3,7 @@
  */
 import React from 'react'
 import '@testing-library/jest-dom/extend-expect'
-import { render, fireEvent, findByText } from '@testing-library/react'
+import { render, fireEvent } from '@testing-library/react'
 import BlogForm from './blogForm'
 
 describe('BLOG FORM TESTS', () => {
@@ -11,18 +11,18 @@ describe('BLOG FORM TESTS', () => {
     const mockCreate = jest.fn()
 
     const component = render(
-      <BlogForm createBlog={mockCreate}/>
+      <BlogForm createBlog={mockCreate} />,
     )
 
-    const result =[
+    const result = [
       [
         {
           title: 'new title',
           author: 'new author',
           url: 'new url',
-          likes: 0
-        }
-      ]
+          likes: 0,
+        },
+      ],
     ]
 
     const title = component.getByPlaceholderText('title')
@@ -31,14 +31,14 @@ describe('BLOG FORM TESTS', () => {
 
     const submit = component.getByText('save')
 
-    fireEvent.change(title,{
-      target:{ value: 'new title' }
+    fireEvent.change(title, {
+      target: { value: 'new title' },
     })
-    fireEvent.change(author,{
-      target:{ value: 'new author' }
+    fireEvent.change(author, {
+      target: { value: 'new author' },
     })
-    fireEvent.change(url,{
-      target:{ value: 'new url' }
+    fireEvent.change(url, {
+      target: { value: 'new url' },
     })
 
     fireEvent.click(submit)

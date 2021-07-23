@@ -7,15 +7,14 @@ import blogService from '../services/blogs'
 //
 
 const LoginForm = ({ setMessage, setErrorMsg, setUser }) => {
-
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const handleUsername = (event) => setUsername(event.target.value)
   const handlePassword = (event) => setPassword(event.target.value)
 
-  // eventhandler for LoginForm submit.
+  // event handler for LoginForm submit.
   // tries to call loginService.login to verify params against database
-  // if succesful sets the user, gives it a token and saves it in local storage.
+  // if successful sets the user, gives it a token and saves it in local storage.
   const handleLogin = async (event) => {
     event.preventDefault()
     try {
@@ -26,7 +25,6 @@ const LoginForm = ({ setMessage, setErrorMsg, setUser }) => {
       setMessage('logged in')
       setTimeout(() => { setMessage(null) }, 5000)
     } catch (exception) {
-      console.log('exception :>> ', exception)
       setErrorMsg('wrong credentials')
       setTimeout(() => { setErrorMsg(null) }, 5000)
     }

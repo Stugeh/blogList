@@ -4,8 +4,7 @@ import React, { useState } from 'react'
 // displays the form  the addition of new blogs
 //
 
-
-// Hndlr functions = ({ target }) => setAttribute(target.value)
+// Handler functions = ({ target }) => setAttribute(target.value)
 const BlogForm = ({ createBlog }) => {
   const [title, setTitle] = useState('')
   const [author, setAuthor] = useState('')
@@ -19,10 +18,10 @@ const BlogForm = ({ createBlog }) => {
   const addBlog = (event) => {
     event.preventDefault()
     const blog = {
-      title: title,
-      author: author,
-      url: url,
-      likes: 0
+      title,
+      author,
+      url,
+      likes: 0,
     }
     createBlog(blog)
     setTitle(''); setAuthor(''); setUrl('')
@@ -35,30 +34,30 @@ const BlogForm = ({ createBlog }) => {
 
         <div>
           <input
-            id='title'
-            type='text'
+            id="title"
+            type="text"
             value={title}
-            placeholder='title'
+            placeholder="title"
             onChange={handleTitle}
           />
         </div>
 
         <div>
           <input
-            id='author'
-            type='text'
+            id="author"
+            type="text"
             value={author}
-            placeholder='author'
+            placeholder="author"
             onChange={handleAuthor}
           />
         </div>
 
         <div>
           <input
-            id='url'
-            type='text'
+            id="url"
+            type="text"
             value={url}
-            placeholder='url'
+            placeholder="url"
             onChange={handleUrl}
           />
         </div>

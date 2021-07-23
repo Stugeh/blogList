@@ -2,7 +2,7 @@ import React, { useState, useImperativeHandle } from 'react'
 import PropTypes from 'prop-types'
 
 //
-// Enables the user to toggle the vicibility of its children
+// Enables the user to toggle the visibility of its children
 //
 
 const Togglable = React.forwardRef((props, ref) => {
@@ -21,7 +21,7 @@ const Togglable = React.forwardRef((props, ref) => {
     setExpanded(!expanded)
   }
 
-  useImperativeHandle(ref, () => { return { toggleExpanded } })
+  useImperativeHandle(ref, () => ({ toggleExpanded }))
 
   return (
     <div>
@@ -38,7 +38,7 @@ const Togglable = React.forwardRef((props, ref) => {
 
 Togglable.displayName = 'Togglable'
 Togglable.propTypes = {
-  buttonLabel: PropTypes.string.isRequired
+  buttonLabel: PropTypes.string.isRequired,
 }
 
 export default Togglable

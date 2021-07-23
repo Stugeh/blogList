@@ -6,7 +6,6 @@ import userService from '../services/users'
 //
 
 const UserForm = ({ setMessage, setErrorMsg }) => {
-
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [name, setName] = useState('')
@@ -14,15 +13,15 @@ const UserForm = ({ setMessage, setErrorMsg }) => {
   const handlePassword = (event) => setPassword(event.target.value)
   const handleName = (event) => setName(event.target.value)
 
-  // eventhandler for UserForm submit
+  // event handler for UserForm submit
   // tries to call loginService.login to verify params against database
-  // if succesful sets the user, gives it a token and saves it in local storage.
+  // if successful sets the user, gives it a token and saves it in local storage.
   const addUser = async (event) => {
     event.preventDefault()
     const user = {
-      username: username,
-      password: password,
-      name: name
+      username,
+      password,
+      name,
     }
     setUsername(''); setPassword(''); setName('')
     try {
@@ -37,14 +36,10 @@ const UserForm = ({ setMessage, setErrorMsg }) => {
     }
   }
 
-
-
-
-
   return (
     <form onSubmit={addUser}>
       <div>
-                new username:
+        new username:
         <input
           type="text"
           value={username}
@@ -53,7 +48,7 @@ const UserForm = ({ setMessage, setErrorMsg }) => {
         />
       </div>
       <div>
-                password:
+        password:
         <input
           type="text"
           value={password}
@@ -62,7 +57,7 @@ const UserForm = ({ setMessage, setErrorMsg }) => {
         />
       </div>
       <div>
-                Name:
+        Name:
         <input
           type="text"
           value={name}
